@@ -8,9 +8,9 @@ import type { TConfig } from '@/infra/config';
 import { abi as AerodromePoolJSONAbi } from '../domain/assets/abis/AerodromePool.json';
 import { abi as AerodromeRouterJSONAbi } from '../domain/assets/abis/AerodromeRouter.json';
 import { Erc20Abi } from './abis';
+import { abi as AerodromPoolTokenJSONAbi } from './abis/Aerodrome.json';
+import { abi as QuickswapRouterJSONAbi } from './abis/QuickSwapRouter.json';
 import { abi as UniswapV2RouterJSONAbi } from './abis/UniswapV2Router.json';
-import { abi as AerodromPoolTokenJSONAbi } from './abis/VelodromePoolToken.json';
-import { abi as QuickswapRouterJSONAbi } from './abis/VelodromeRouter.json';
 import { abi as WETH9JSONAbi } from './abis/WETH9.json';
 
 @Injectable()
