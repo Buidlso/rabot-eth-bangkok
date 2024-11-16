@@ -59,6 +59,11 @@ export const BaseConfigSchema = z.object({
   BASE_JSON_RPC_PROVIDER_URL: str,
 });
 
+export const AlchemyWebhookConfigSchema = z.object({
+  ALCHEMY_WEBHOOK_AUTH_TOKEN: str,
+  ALCHEMY_WEBHOOK_ID: str,
+});
+
 export const ConfigSchema = AppConfigSchema.and(NodeConfigSchema)
   .and(CookieConfigSchema)
   .and(PostgresConfigSchema)
@@ -66,6 +71,7 @@ export const ConfigSchema = AppConfigSchema.and(NodeConfigSchema)
   .and(JwtConfigSchema)
   .and(TurnkeyConfigSchema)
   .and(BiconomyConfigSchema)
-  .and(BaseConfigSchema);
+  .and(BaseConfigSchema)
+  .and(AlchemyWebhookConfigSchema);
 
 export type TConfig = z.infer<typeof ConfigSchema>;

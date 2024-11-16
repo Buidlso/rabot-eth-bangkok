@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import Web3 from 'web3';
 
 import { TransactionOwnerEnum, TransactionStatusEnum } from '@/domain/enums';
 import { CryptoHelper } from '@/helpers/crypto.helper';
@@ -25,16 +26,18 @@ export class WebhookService {
     amount: number,
     asset: string
   ): Promise<void> {
+    const checksumFrom = Web3.utils.toChecksumAddress(fromAddress);
+    const checksumTo = Web3.utils.toChecksumAddress(toAddress);
     const isValidTransaction = await this._isValidTransaction(
-      fromAddress,
-      toAddress
+      checksumFrom,
+      checksumTo
     );
     if (!isValidTransaction) {
       return;
     }
     await this._processTransaction(
-      fromAddress,
-      toAddress,
+      checksumFrom,
+      checksumTo,
       transactionHash,
       amount,
       asset
