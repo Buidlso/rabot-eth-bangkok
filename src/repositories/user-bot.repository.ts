@@ -25,7 +25,7 @@ export class UserBotRepository {
 
   public async findByUserIdAndBotId(
     botId: string,
-    userId: string,
+    userId: string
   ): Promise<UserBot | null> {
     return this.repository.findOneBy({
       user: { id: userId },
