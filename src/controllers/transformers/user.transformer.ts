@@ -8,8 +8,9 @@ export const CreateUserReqTransformer = z.object({
 });
 export const CreateUserResTransformer = z.object({
   id: z.string(),
+  uid: z.string(),
   name: z.string().nullable(),
-  email: z.string().email(),
+  email: z.string().nullable(),
   walletAddress: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),

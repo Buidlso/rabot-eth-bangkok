@@ -64,6 +64,7 @@ export class UserService {
     name?: string
   ) {
     const user = new User();
+    user.uid = uid;
     user.walletAddress = walletAddress;
     user.email = email ?? '';
     user.name = name ?? null;
