@@ -65,7 +65,6 @@ export class QuickswapPoolStrategy implements IBotStrategy {
       const smartWallet =
         await this.biconomyHelper.getSmartAccount(connectedSigner);
       const smartWalletAddress = await smartWallet.getAddress();
-      console.log(smartWalletAddress);
 
       const txs = await this.buildDepositTxs(
         connectedSigner,

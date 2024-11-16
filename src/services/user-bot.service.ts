@@ -75,7 +75,7 @@ export class UserBotService {
   ): Promise<void> {
     const userBot = await this._findUserBotById(id);
     const signer = await this._turnKeyAdapter.getSignerByAddress(
-      userBot.userWalletAddress
+      userBot.botWalletAddress
     );
     const txHash = await this._botOrchestrator.deposit(botType, signer, amount);
     if (!txHash) this._throwDepositError();
