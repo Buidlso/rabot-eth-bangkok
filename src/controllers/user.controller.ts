@@ -1,4 +1,3 @@
-import type { GetAccountBalanceReply } from '@ankr.com/ankr.js';
 import {
   Body,
   Controller,
@@ -41,19 +40,19 @@ export class UserController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @Get('all-balances-by-address')
+  public async getAllBalancesByAddress(
+    @Query('walletAddress') walletAddress: string
+  ): Promise<any> {
+    const balances =
+      await this._userService.getAllBalancesByAddress(walletAddress);
+    return balances;
+  }
+
+  @HttpCode(HttpStatus.OK)
   @Get(':id')
   public async getUser(@Param('id') id: string): Promise<TGetUserResDto> {
     const user = await this._userService.findById(id);
     return await GetUserResTransformer.parseAsync(user);
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @Get('all-balances-by-address')
-  public async getAllBalancesByAddress(
-    @Query('walletAddress') walletAddress: string
-  ): Promise<GetAccountBalanceReply> {
-    const balances =
-      await this._userService.getAllBalancesByAddress(walletAddress);
-    return balances;
   }
 }
