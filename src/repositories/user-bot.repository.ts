@@ -23,6 +23,16 @@ export class UserBotRepository {
     return this.repository.findOneBy({ id });
   }
 
+  public async findByUserIdAndBotId(
+    botId: string,
+    userId: string,
+  ): Promise<UserBot | null> {
+    return this.repository.findOneBy({
+      user: { id: userId },
+      bot: { id: botId },
+    });
+  }
+
   public async findByWalletAddressAnsSmartWalletAddress(
     userWalletAddress: string,
     smartWalletAddress: string

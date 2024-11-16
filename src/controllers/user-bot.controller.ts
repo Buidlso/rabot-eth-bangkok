@@ -45,6 +45,7 @@ export class UserBotController {
     const userBots = await this._userBotService.listByUserId(userId);
     return await ListUserBotsResTransformer.parseAsync(userBots);
   }
+
   @HttpCode(HttpStatus.OK)
   @Get(':id')
   public async getUserBot(@Param('id') id: string): Promise<TGetUserBotResDto> {
