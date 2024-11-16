@@ -1,3 +1,5 @@
 import type { Provider } from '@nestjs/common';
 
-export const Adapters: Provider[] = [];
+import { TurnKeyAdapter } from '@/adapters/turn-key.adapter';
+
+export const Adapters: Provider[] = [TurnKeyAdapter];
