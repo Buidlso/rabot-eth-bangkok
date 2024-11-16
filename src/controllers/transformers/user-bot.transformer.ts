@@ -48,3 +48,4 @@ export const WithdrawFromUserBotReqTransformer = z.object({
 export const WithdrawFromUserBotResTransformer = z.object({
   tx: z.string(),
 });
+

@@ -62,7 +62,7 @@ export class UserBotService {
     return this._userBotRepository.listByUserId(user.id);
   }
 
-  public async findById(id: string): Promise<UserBot> {
+  public async findById(id: string): Promise<UserBot | null> {
     return this._findUserBotById(id);
   }
 
@@ -75,6 +75,10 @@ export class UserBotService {
     network?: string
   ): Promise<void> {
     const userBot = await this._findUserBotById(id);
+    if (!userBot) {
+      return;
+    }
+
     const signer = await this._turnKeyAdapter.getSignerByAddress(
       userBot.botWalletAddress
     );
@@ -240,10 +244,10 @@ export class UserBotService {
     return bot;
   }
 
-  private async _findUserBotById(id: string): Promise<UserBot> {
+  private async _findUserBotById(id: string): Promise<UserBot | null> {
     const userBot = await this._userBotRepository.findById(id);
     if (!userBot) {
-      this._throwUserBotNotFoundError();
+      return null;
     }
     return userBot;
   }

@@ -51,9 +51,12 @@ export class BotController {
     return await ListBotsTransformer.parseAsync(bots);
   }
   @HttpCode(HttpStatus.OK)
-  @Get(':id')
-  public async getBot(@Param('id') id: string): Promise<TGetBotResDto> {
-    const bot = await this._botService.findById(id);
+  @Get(':id/user/:userId')
+  public async getBot(
+    @Param('id') id: string,
+    @Param('userId') userId: string
+  ): Promise<TGetBotResDto> {
+    const bot = await this._botService.findById(id, userId);
     return await GetBotResTransformer.parseAsync(bot);
   }
 }

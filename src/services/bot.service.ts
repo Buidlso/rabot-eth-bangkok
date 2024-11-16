@@ -3,10 +3,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Bot } from '@/domain/entities';
 import type { BotEnum } from '@/domain/enums';
 import { BotRepository } from '@/repositories/bot.repository';
+import { UserBotRepository } from '@/repositories/user-bot.repository';
 
 @Injectable()
 export class BotService {
-  constructor(private readonly _botRepository: BotRepository) {}
+  constructor(
+    private readonly _botRepository: BotRepository,
+    private readonly _userBotRepository: UserBotRepository
+  ) {}
 
   public async create(
     name: string,
@@ -23,12 +27,20 @@ export class BotService {
     return await this._botRepository.list();
   }
 
-  public async findById(id: string): Promise<Bot> {
+  public async findById(id: string, userId: string): Promise<any> {
     const bot = await this._botRepository.findById(id);
+    const userBot = await this._userBotRepository.findByUserIdAndBotId(
+      id,
+      userId
+    );
     if (!bot) {
       this._throwBotNotFoundError();
     }
-    return bot;
+    return {
+      ...bot,
+      userBotSmartWalletAddress: userBot?.smartWalletAddress ?? null,
+      userBotDepositedAmount: userBot?.amountDeposited ?? null,
+    };
   }
 
   private _createBotEntity(
