@@ -3,6 +3,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { ethers } from 'ethers';
 
 import { AlchemyWebhookAdapter } from '@/adapters/alchemy-webhook.adapter';
 import { TurnKeyAdapter } from '@/adapters/turn-key.adapter';
@@ -95,6 +96,53 @@ export class UserBotService {
     );
     await this._txRepository.createMany(txs);
     await this._incrementAmountDeposited(userBot, amount);
+  }
+
+  public async withdraw(
+    id: string,
+    amountInPercentage: number,
+    currency?: string,
+    network?: string
+  ): Promise<string> {
+    const userBot = await this._findUserBotById(id);
+    const signer = await this._turnKeyAdapter.getSignerByAddress(
+      userBot.userWalletAddress
+    );
+    const balance = await this._botOrchestrator.getStakedBalance(
+      userBot.botType,
+      signer
+    );
+    const amountInEth = this._calculateWithdrawAmountInEth(
+      balance,
+      amountInPercentage
+    );
+    const txHash = await this._botOrchestrator.withdraw(
+      userBot.botType,
+      userBot.userWalletAddress,
+      signer,
+      amountInEth
+    );
+    if (!txHash) this._throwWithdrawError();
+    const smartContractAddress = this._botOrchestrator.getContractAddress(
+      userBot.botType
+    );
+    const withdrawTxsOrder = this._botOrchestrator.getWithdrawTxOrder(
+      userBot.botType
+    );
+    const batchId = this._cryptoHelper.genUUID();
+    const txs = this._buildTxsWithOrder(
+      userBot.id,
+      txHash,
+      batchId,
+      smartContractAddress,
+      userBot.botWalletAddress,
+      Number(amountInEth),
+      withdrawTxsOrder,
+      currency,
+      network
+    );
+    await this._txRepository.createMany(txs);
+    return txHash;
   }
 
   private async _createUserBotWallet(): Promise<
@@ -214,5 +262,16 @@ export class UserBotService {
 
   private _throwDepositError(): never {
     throw new InternalServerErrorException('Deposit failed');
+  }
+
+  private _throwWithdrawError(): never {
+    throw new InternalServerErrorException('Withdraw failed');
+  }
+  private _calculateWithdrawAmountInEth(
+    balance: bigint,
+    amountInPercentage: number
+  ): string {
+    const amountInWei = (balance / 100n) * ethers.toBigInt(amountInPercentage);
+    return ethers.formatEther(amountInWei);
   }
 }

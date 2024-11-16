@@ -39,3 +39,12 @@ export const GetUserBotResTransformer = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
 });
+
+export const WithdrawFromUserBotReqTransformer = z.object({
+  amountInPercentage: z.number().min(1).max(100),
+  currency: z.string().optional(),
+  network: z.string().optional(),
+});
+export const WithdrawFromUserBotResTransformer = z.object({
+  tx: z.string(),
+});

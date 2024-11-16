@@ -89,7 +89,6 @@ export class QuickswapPoolStrategy implements IBotStrategy {
     const smartWallet =
       await this.biconomyHelper.getSmartAccount(connectedSigner);
     const smartWalletAddress = await smartWallet.getAddress();
-    console.log(smartWalletAddress);
     const WMATICUSDTLPContract = this.smartContractHelper.getERC20Contract(
       connectedSigner,
       this.smartContractHelper.smartContractAddressMap
@@ -291,9 +290,19 @@ export class QuickswapPoolStrategy implements IBotStrategy {
       .QUICKSWAP_USDT_WMATIC_LP_TOKEN;
   }
   getWithdrawTxOrder(): string[] {
-    throw new Error('Method not implemented.');
+    return ['APPROVE_WITHDRAW_LP_TOKEN', 'REMOVE_LIQUIDITY'];
   }
-  getStakedBalance(signer: TurnkeySigner): Promise<bigint> {
-    throw new Error('Method not implemented.');
+  async getStakedBalance(signer: TurnkeySigner): Promise<bigint> {
+    const connectedSigner = signer.connect(this.polygonJsonProvider);
+    const smartWallet =
+      await this.biconomyHelper.getSmartAccount(connectedSigner);
+    const smartWalletAddress = await smartWallet.getAddress();
+    const WMATICUSDTLPContract = this.smartContractHelper.getERC20Contract(
+      connectedSigner,
+      this.smartContractHelper.smartContractAddressMap
+        .QUICKSWAP_USDT_WMATIC_LP_TOKEN
+    );
+    const balance = await WMATICUSDTLPContract.balanceOf(smartWalletAddress);
+    return balance;
   }
 }
