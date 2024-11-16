@@ -45,7 +45,7 @@ export const WithdrawFromUserBotReqTransformer = z.object({
   currency: z.string().optional(),
   network: z.string().optional(),
 });
+
 export const WithdrawFromUserBotResTransformer = z.object({
   tx: z.string(),
 });
-

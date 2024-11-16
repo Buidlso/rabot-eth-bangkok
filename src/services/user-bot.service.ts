@@ -103,12 +103,19 @@ export class UserBotService {
   }
 
   public async withdraw(
-    id: string,
+    botId: string,
+    userId: string,
     amountInPercentage: number,
     currency?: string,
     network?: string
-  ): Promise<string> {
-    const userBot = await this._findUserBotById(id);
+  ): Promise<string | void> {
+    const userBot = await this._findUserBotByBotIdAndUserId(botId, userId);
+    if (!userBot) {
+      return;
+    }
+
+    console.log({ userBot });
+
     const signer = await this._turnKeyAdapter.getSignerByAddress(
       userBot.userWalletAddress
     );
@@ -246,6 +253,20 @@ export class UserBotService {
 
   private async _findUserBotById(id: string): Promise<UserBot | null> {
     const userBot = await this._userBotRepository.findById(id);
+    if (!userBot) {
+      return null;
+    }
+    return userBot;
+  }
+
+  private async _findUserBotByBotIdAndUserId(
+    botId: string,
+    userId: string
+  ): Promise<UserBot | null> {
+    const userBot = await this._userBotRepository.findByUserIdAndBotId(
+      botId,
+      userId
+    );
     if (!userBot) {
       return null;
     }

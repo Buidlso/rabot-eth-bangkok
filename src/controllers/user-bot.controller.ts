@@ -60,15 +60,17 @@ export class UserBotController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post(':id/withdraw')
+  @Post('bot/:botId/user/:userId/withdraw')
   public async withdrawFromUserBot(
-    @Param('id') id: string,
+    @Param('botId') botId: string,
+    @Param('userId') userId: string,
     @Body() dto: TWithdrawFromUserBotReqDto
   ): Promise<TWithdrawFromUserBotResDto> {
     const { amountInPercentage, currency, network } =
       await WithdrawFromUserBotReqTransformer.parseAsync(dto);
     const txHash = await this._userBotService.withdraw(
-      id,
+      botId,
+      userId,
       amountInPercentage,
       currency,
       network
