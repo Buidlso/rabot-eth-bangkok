@@ -39,6 +39,7 @@ export class BotService {
     return {
       ...bot,
       userBotSmartWalletAddress: userBot?.smartWalletAddress ?? null,
+      userBotDepositedAmount: userBot?.amountDeposited ?? null,
     };
   }
 

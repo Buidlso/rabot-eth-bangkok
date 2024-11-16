@@ -38,6 +38,7 @@ export const GetBotResTransformer = z.object({
   type: z.nativeEnum(BotEnum),
   description: z.string().nullable(),
   userBotSmartWalletAddress: z.string().nullable(),
+  userBotDepositedAmount: z.number().nullable(),
   logo: z.string().nullable(),
   network: z.string().nullable(),
   createdAt: z.date(),
