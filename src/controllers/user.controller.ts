@@ -50,9 +50,11 @@ export class UserController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Get(':id')
-  public async getUser(@Param('id') id: string): Promise<TGetUserResDto> {
-    const user = await this._userService.findById(id);
+  @Get(':walletAddress')
+  public async getUserByWalletAddress(
+    @Param('walletAddress') walletAddress: string
+  ): Promise<TGetUserResDto> {
+    const user = await this._userService.findByWalletAddress(walletAddress);
     return await GetUserResTransformer.parseAsync(user);
   }
 }
