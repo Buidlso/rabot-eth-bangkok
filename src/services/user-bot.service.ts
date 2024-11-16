@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
+import { AlchemyWebhookAdapter } from '@/adapters/alchemy-webhook.adapter';
 import { TurnKeyAdapter } from '@/adapters/turn-key.adapter';
 import type { Bot, User } from '@/domain/entities';
 import { Tx } from '@/domain/entities';
@@ -30,6 +31,7 @@ export class UserBotService {
     private readonly _userBotRepository: UserBotRepository,
     private readonly _txRepository: TxRepository,
     private readonly _turnKeyAdapter: TurnKeyAdapter,
+    private readonly _alchemyWebhookAdapter: AlchemyWebhookAdapter,
     private readonly _cryptoHelper: CryptoHelper,
     private readonly _smartAccountHelper: SmartAccountHelper,
     private readonly _smartContractHelper: SmartContractHelper,
@@ -50,6 +52,7 @@ export class UserBotService {
       smartWalletAddress,
       user.walletAddress
     );
+    await this._alchemyWebhookAdapter.addAddressToWebhook(smartWalletAddress);
     return this._userBotRepository.create(userBot);
   }
 
