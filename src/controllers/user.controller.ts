@@ -18,9 +18,14 @@ export class UserController {
   public async createUser(
     @Body() dto: TCreatUserReqDto
   ): Promise<TCreateUserResDto> {
-    const { name, email, walletAddress } =
+    const { name, email, walletAddress, uid } =
       await CreateUserReqTransformer.parseAsync(dto);
-    const user = await this._userService.create(email, walletAddress, name);
+    const user = await this._userService.create(
+      uid,
+      walletAddress,
+      email,
+      name
+    );
     return await CreateUserResTransformer.parseAsync(user);
   }
 }

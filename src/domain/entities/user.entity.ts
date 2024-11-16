@@ -17,8 +17,11 @@ export class User {
   @OneToMany(() => UserBot, (userBot) => userBot.user)
   userBots: UserBot[];
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true, default: null })
   email: string;
+
+  @Column({ type: 'text' })
+  uid: string;
 
   @Column({ type: 'text' })
   walletAddress: string;

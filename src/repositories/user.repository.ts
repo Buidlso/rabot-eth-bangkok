@@ -19,6 +19,10 @@ export class UserRepository {
     return await this.repository.existsBy({ email });
   }
 
+  public async existByUid(uid: string): Promise<boolean> {
+    return await this.repository.existsBy({ uid });
+  }
+
   public async existByWalletAddress(walletAddress: string): Promise<boolean> {
     return await this.repository.existsBy({ walletAddress });
   }

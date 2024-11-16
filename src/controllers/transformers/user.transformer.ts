@@ -2,7 +2,8 @@ import { z } from 'zod';
 
 export const CreateUserReqTransformer = z.object({
   name: z.string().optional(),
-  email: z.string().email(),
+  email: z.string().email().optional(),
+  uid: z.string(),
   walletAddress: z.string(),
 });
 export const CreateUserResTransformer = z.object({

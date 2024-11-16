@@ -12,13 +12,14 @@ export class UserService {
   constructor(private readonly _userRepository: UserRepository) {}
 
   public async create(
-    email: string,
+    uid: string,
     walletAddress: string,
+    email?: string,
     name?: string
-  ): Promise<User> {
-    const exisitngUser = await this._userRepository.findByEmail(email);
-    if (exisitngUser) return exisitngUser;
-    const user = this._createUserEntity(email, walletAddress, name);
+  ): Promise<User | undefined> {
+    const isAnExisitngUser = await this.isAnExisitngUser(uid);
+    if (isAnExisitngUser) return;
+    const user = this._createUserEntity(uid, walletAddress, email, name);
     return await this._userRepository.create(user);
   }
 
@@ -47,7 +48,7 @@ export class UserService {
   }
 
   private async _rejectExisitingUser(email: string): Promise<void> {
-    if (await this._userRepository.existByEmail(email)) {
+    if (await this._userRepository.existByUid(email)) {
       this._throwUserAlreadyExistsError();
     }
   }
@@ -57,13 +58,14 @@ export class UserService {
   }
 
   private _createUserEntity(
-    email: string,
+    uid: string,
     walletAddress: string,
+    email?: string,
     name?: string
   ) {
     const user = new User();
-    user.email = email;
     user.walletAddress = walletAddress;
+    user.email = email ?? '';
     user.name = name ?? null;
     return user;
   }
