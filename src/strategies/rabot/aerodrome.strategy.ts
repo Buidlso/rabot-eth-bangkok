@@ -95,7 +95,7 @@ export class AerodromeRabotStrategy implements IBotStrategy {
         ...txs
       );
     } catch (error) {
-      this.logger.error(error);
+      console.log(error);
       throw new InternalServerErrorException(error.message);
     }
   }
@@ -177,20 +177,20 @@ export class AerodromeRabotStrategy implements IBotStrategy {
         swapAmountInWei,
         minAmountOut
       ),
-      this.createApproveTx(connectedSigner),
-      this.createAddLiquidityTx(
-        connectedSigner,
-        swapAmountInWei,
-        minAmountOut,
-        smartWalletAddress
-      ),
-      this.createApproveLPTokenTx(connectedSigner),
-      this.createDepositTx(
-        connectedSigner,
-        smartWalletAddress,
-        wethDesiredAmountInWei,
-        usdcDesiredAmountInWei
-      ),
+      // this.createApproveTx(connectedSigner),
+      // this.createAddLiquidityTx(
+      //   connectedSigner,
+      //   swapAmountInWei,
+      //   minAmountOut,
+      //   smartWalletAddress
+      // ),
+      // this.createApproveLPTokenTx(connectedSigner),
+      // this.createDepositTx(
+      //   connectedSigner,
+      //   smartWalletAddress,
+      //   wethDesiredAmountInWei,
+      //   usdcDesiredAmountInWei
+      // ),
     ]);
     return txs;
   }
@@ -427,7 +427,8 @@ export class AerodromeRabotStrategy implements IBotStrategy {
           this._smartContractHelper.getBaseWethAddress(),
           this._smartContractHelper.getBaseUsdcAddress(),
           isStable,
-          this._smartContractHelper.getAerodromDefaultFactoryContractAddress(),
+          this._smartContractHelper.smartContractAddressMap
+            .AERODROME_DEFAULT_FACTORY,
           amountWETHDesiredInWei,
           amountUSDCDesiredInWei
         )
@@ -454,7 +455,8 @@ export class AerodromeRabotStrategy implements IBotStrategy {
         this._smartContractHelper.getBaseWethAddress(),
         this._smartContractHelper.getBaseUsdcAddress(),
         isStable,
-        this._smartContractHelper.getAerodromDefaultFactoryContractAddress(),
+        this._smartContractHelper.smartContractAddressMap
+          .AERODROME_DEFAULT_FACTORY,
         amount
       )
       .call({
