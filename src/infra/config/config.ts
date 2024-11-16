@@ -40,6 +40,7 @@ export const RpcProviderConfigSchema = z.object({
   POLYGON_MAINNET_RPC_PROVIDER_URL: str,
   ARBITRUM_MAINNET_RPC_PROVIDER_URL: str,
   OPTIMISM_MAINNET_RPC_PROVIDER_URL: str,
+  ANKR_RPC_PROVIDER_URL: str,
 });
 
 export const TurnkeyConfigSchema = z.object({

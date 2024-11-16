@@ -36,6 +36,7 @@
     "migration:show": "npm run build && npm run typeorm -- migration:show -d ./db/typeorm.config.ts"
   },
   "dependencies": {
+    "@ankr.com/ankr.js": "^0.5.2",
     "@biconomy/account": "^4.5.7",
     "@nestjs/axios": "^3.0.2",
     "@nestjs/cache-manager": "^2.1.1",
