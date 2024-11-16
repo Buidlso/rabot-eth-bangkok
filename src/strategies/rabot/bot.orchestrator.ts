@@ -5,14 +5,18 @@ import type { BotEnum } from '@/domain/enums';
 
 import { AerodromeRabotStrategy } from './aerodrome.strategy';
 import type { IBotStrategy } from './bot.strategy.interface';
+import { QuickswapPoolStrategy } from './quickswap.strategy';
 
 @Injectable()
 export class BotOrchestrator {
   private _botMap: Map<BotEnum, IBotStrategy>;
   private _bots: IBotStrategy[];
-  constructor(private readonly aerodromeRabotStrategy: AerodromeRabotStrategy) {
+  constructor(
+    private readonly aerodromeRabotStrategy: AerodromeRabotStrategy,
+    private readonly quickswapStrategy: QuickswapPoolStrategy
+  ) {
     this._botMap = new Map<BotEnum, IBotStrategy>();
-    this._bots = [this.aerodromeRabotStrategy];
+    this._bots = [this.aerodromeRabotStrategy, this.quickswapStrategy];
     this.registerRabots();
   }
 

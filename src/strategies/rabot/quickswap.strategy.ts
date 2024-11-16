@@ -82,6 +82,48 @@ export class QuickswapPoolStrategy implements IBotStrategy {
     }
   }
 
+  public async withdraw(
+    signer: TurnkeySigner,
+    rabbleWalletAddress: string
+  ): Promise<string | undefined> {
+    const connectedSigner = signer.connect(this.polygonJsonProvider);
+    const smartWallet =
+      await this.biconomyHelper.getSmartAccount(connectedSigner);
+    const smartWalletAddress = await smartWallet.getAddress();
+    console.log(smartWalletAddress);
+    const WMATICUSDTLPContract = this.smartContractHelper.getERC20Contract(
+      connectedSigner,
+      this.smartContractHelper.smartContractAddressMap
+        .QUICKSWAP_USDT_WMATIC_LP_TOKEN
+    );
+    const balanceToWithdraw =
+      await WMATICUSDTLPContract.balanceOf(smartWalletAddress);
+
+    const txs = await this.buildWithdrawTxs(
+      connectedSigner,
+      smartWalletAddress,
+      balanceToWithdraw
+    );
+
+    return await this.biconomyHelper.performSmartWalletTxs(smartWallet, ...txs);
+  }
+
+  private async buildWithdrawTxs(
+    connectedSigner: TurnkeySigner,
+    smartWalletAddress: string,
+    balance: bigint
+  ): Promise<any[]> {
+    const txs = await Promise.all([
+      this.createRemoveApproveTx(connectedSigner),
+      this.createRemoveLiquidityTx(
+        connectedSigner,
+        balance,
+        smartWalletAddress
+      ),
+    ]);
+    return txs;
+  }
+
   private async buildDepositTxs(
     connectedSigner: TurnkeySigner,
     amount: number,
@@ -137,6 +179,25 @@ export class QuickswapPoolStrategy implements IBotStrategy {
     };
   }
 
+  private createRemoveApproveTx(signer: TurnkeySigner): TSmartWalletTx {
+    const usdtMaticLpContractAddress =
+      this.smartContractHelper.smartContractAddressMap
+        .QUICKSWAP_USDT_WMATIC_LP_TOKEN;
+    const usdtMaticLpContract = this.smartContractHelper.getERC20Contract(
+      signer,
+      usdtMaticLpContractAddress
+    );
+    const quickswapRouterAddress =
+      this.smartContractHelper.smartContractAddressMap.POLYGON_QUICKSWAP_ROUTER;
+    return {
+      to: usdtMaticLpContractAddress,
+      data: usdtMaticLpContract.interface.encodeFunctionData('approve', [
+        quickswapRouterAddress,
+        ethers.MaxUint256,
+      ]),
+    };
+  }
+
   private createApproveTx(signer: TurnkeySigner): TSmartWalletTx {
     const usdcContract = this.smartContractHelper.getEcr20UsdcContract(signer);
     const usdcContractAddress =
@@ -149,6 +210,31 @@ export class QuickswapPoolStrategy implements IBotStrategy {
         quickswapRouterAddress,
         ethers.MaxUint256,
       ]),
+    };
+  }
+
+  private async createRemoveLiquidityTx(
+    signer: TurnkeySigner,
+    balanceToWithdraw: bigint,
+    smartAccountAddress: string
+  ): Promise<any> {
+    const Contracts = this.smartContractHelper.smartContractAddressMap;
+    const quickswapRouterContract =
+      this.smartContractHelper.getQuickswapRouterContract(signer);
+    return {
+      to: this.smartContractHelper.getQuickswapRouterAddress(),
+      data: quickswapRouterContract.interface.encodeFunctionData(
+        'removeLiquidity',
+        [
+          Contracts.POLYGON_WMATIC,
+          Contracts.POLYGON_USDT,
+          balanceToWithdraw,
+          '0',
+          '0',
+          smartAccountAddress,
+          this.DEPOSIT_DEADLINE,
+        ]
+      ),
     };
   }
 
@@ -200,13 +286,6 @@ export class QuickswapPoolStrategy implements IBotStrategy {
 
   getRabot(): BotEnum {
     return BotEnum.QUICKSWAP_LP;
-  }
-  withdraw(
-    signer: TurnkeySigner,
-    rabbleWalletAddress: string,
-    amount: string
-  ): Promise<string | undefined> {
-    throw new Error('Method not implemented.');
   }
   getContractAddress(): string {
     return this.smartContractHelper.smartContractAddressMap

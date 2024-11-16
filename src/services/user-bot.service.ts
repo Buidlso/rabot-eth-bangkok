@@ -101,7 +101,7 @@ export class UserBotService {
     const turnkeySigner =
       await this._turnKeyAdapter.getSignerByAddress(botWalletAddres);
     const connectedSigner = turnkeySigner.connect(
-      this._smartContractHelper.getBaseJsonRpcProvider()
+      this._smartContractHelper.getPolygonJsonRpcProvider()
     );
     const smartAccount =
       await this._smartAccountHelper.getSmartAccount(connectedSigner);

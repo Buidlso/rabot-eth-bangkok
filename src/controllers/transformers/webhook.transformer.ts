@@ -52,6 +52,6 @@ export const ListenWebhookReqTransformer = z.object({
   fromAddress: z.string(),
   toAddress: z.string(),
   transactionHash: z.string(),
-  value: z.number(),
+  amount: z.number(),
   asset: z.string(),
 });
