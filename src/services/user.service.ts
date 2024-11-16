@@ -1,15 +1,20 @@
+import type { GetAccountBalanceReply } from '@ankr.com/ankr.js';
 import {
   ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 
+import { AnkrAdapter } from '@/adapters/ankr.adapter';
 import { User } from '@/domain/entities';
 import { UserRepository } from '@/repositories/user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly _userRepository: UserRepository) {}
+  constructor(
+    private readonly _userRepository: UserRepository,
+    private readonly _ankrAdapter: AnkrAdapter
+  ) {}
 
   public async create(
     uid: string,
@@ -21,6 +26,12 @@ export class UserService {
     if (isAnExisitngUser) return;
     const user = this._createUserEntity(uid, walletAddress, email, name);
     return await this._userRepository.create(user);
+  }
+
+  public async getAllBalancesByAddress(
+    walletAddress: string
+  ): Promise<GetAccountBalanceReply> {
+    return await this._ankrAdapter.getBalances(walletAddress);
   }
 
   public async findByWalletAddress(walletAddress: string): Promise<User> {
