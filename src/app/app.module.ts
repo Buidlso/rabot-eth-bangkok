@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 
+import { Bot, Tx, User, UserBot } from '@/domain/entities';
 import { ConfigModule } from '@/infra/config';
 import { DatabaseModule } from '@/infra/database';
 import { LoggerModule } from '@/infra/logger';
@@ -20,7 +21,7 @@ import { Subscribers } from './subscribers';
     ConfigModule,
     LoggerModule,
     DatabaseModule,
-    DatabaseModule.forFeature(),
+    DatabaseModule.forFeature(User, Bot, UserBot, Tx),
     EventEmitterModule.forRoot({
       global: true,
     }),
