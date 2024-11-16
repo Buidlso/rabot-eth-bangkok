@@ -16,3 +16,26 @@ export const CreateUserBotResTransformer = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
 });
+
+export const ListUserBotsResTransformer = z.array(
+  z.object({
+    id: z.string(),
+    botType: z.nativeEnum(BotEnum),
+    botWalletId: z.string(),
+    botWalletAddress: z.string(),
+    userWalletAddress: z.string(),
+    smartWalletAddress: z.string(),
+    createdAt: z.date(),
+    updatedAt: z.date(),
+  })
+);
+export const GetUserBotResTransformer = z.object({
+  id: z.string(),
+  botType: z.nativeEnum(BotEnum),
+  botWalletId: z.string(),
+  botWalletAddress: z.string(),
+  userWalletAddress: z.string(),
+  smartWalletAddress: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});

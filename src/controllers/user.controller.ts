@@ -1,12 +1,21 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 
 import { UserService } from '@/services/user.service';
 
-import type { TCreateUserResDto } from './dtos/user.dto';
+import type { TCreateUserResDto, TGetUserResDto } from './dtos/user.dto';
 import { TCreatUserReqDto } from './dtos/user.dto';
 import {
   CreateUserReqTransformer,
   CreateUserResTransformer,
+  GetUserResTransformer,
 } from './transformers/user.transformer';
 
 @Controller('users')
@@ -27,5 +36,12 @@ export class UserController {
       name
     );
     return await CreateUserResTransformer.parseAsync(user);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get(':id')
+  public async getUser(@Param('id') id: string): Promise<TGetUserResDto> {
+    const user = await this._userService.findById(id);
+    return await GetUserResTransformer.parseAsync(user);
   }
 }

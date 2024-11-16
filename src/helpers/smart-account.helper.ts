@@ -39,8 +39,8 @@ export class SmartAccountHelper {
       const userOpResponse = await smartWallet.buildUserOp(txs, {
         paymasterServiceData: { mode: PaymasterMode.SPONSORED },
       });
-      console.log(userOpResponse)
-      return " ";
+      console.log(userOpResponse);
+      return ' ';
       const response = await smartWallet.sendUserOp(userOpResponse);
       const { receipt } = await response.wait(1);
       return receipt.transactionHash;

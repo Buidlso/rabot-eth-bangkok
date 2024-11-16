@@ -1,12 +1,26 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 
 import { BotService } from '@/services/bot.service';
 
-import type { TCreateBotResDto } from './dtos/bot.dto';
+import type {
+  TCreateBotResDto,
+  TGetBotResDto,
+  TListBotsResDto,
+} from './dtos/bot.dto';
 import { TCreateBotReqDto } from './dtos/bot.dto';
 import {
   CreateBotReqTransformer,
   CreateBotResTransformer,
+  GetBotResTransformer,
+  ListBotsTransformer,
 } from './transformers/bot.transformer';
 
 @Controller('bots')
@@ -28,5 +42,18 @@ export class BotController {
       network
     );
     return await CreateBotResTransformer.parseAsync(bot);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get()
+  public async listBots(): Promise<TListBotsResDto> {
+    const bots = await this._botService.list();
+    return await ListBotsTransformer.parseAsync(bots);
+  }
+  @HttpCode(HttpStatus.OK)
+  @Get(':id')
+  public async getBot(@Param('id') id: string): Promise<TGetBotResDto> {
+    const bot = await this._botService.findById(id);
+    return await GetBotResTransformer.parseAsync(bot);
   }
 }

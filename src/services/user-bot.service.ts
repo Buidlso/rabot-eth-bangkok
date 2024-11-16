@@ -53,6 +53,11 @@ export class UserBotService {
     return this._userBotRepository.create(userBot);
   }
 
+  public async listByUserId(userId: string): Promise<UserBot[]> {
+    const user = await this._findUserById(userId);
+    return this._userBotRepository.listByUserId(user.id);
+  }
+
   public async findById(id: string): Promise<UserBot> {
     return this._findUserBotById(id);
   }

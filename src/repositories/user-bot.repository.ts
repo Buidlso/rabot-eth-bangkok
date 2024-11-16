@@ -15,6 +15,10 @@ export class UserBotRepository {
     return this.repository.save(userBot);
   }
 
+  public async listByUserId(userId: string): Promise<UserBot[]> {
+    return this.repository.findBy({ user: { id: userId } });
+  }
+
   public async findById(id: string): Promise<UserBot | null> {
     return this.repository.findOneBy({ id });
   }

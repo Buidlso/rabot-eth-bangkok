@@ -15,3 +15,13 @@ export const CreateUserResTransformer = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
 });
+
+export const GetUserResTransformer = z.object({
+  id: z.string(),
+  uid: z.string(),
+  name: z.string().nullable(),
+  email: z.string().nullable(),
+  walletAddress: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});

@@ -15,6 +15,10 @@ export class BotRepository {
     return this.repository.save(bot);
   }
 
+  public async list(): Promise<Bot[]> {
+    return this.repository.find();
+  }
+
   public async findById(id: string): Promise<Bot | null> {
     return this.repository.findOneBy({ id });
   }

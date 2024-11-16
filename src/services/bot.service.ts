@@ -19,6 +19,10 @@ export class BotService {
     return await this._botRepository.create(bot);
   }
 
+  public async list(): Promise<Bot[]> {
+    return await this._botRepository.list();
+  }
+
   public async findById(id: string): Promise<Bot> {
     const bot = await this._botRepository.findById(id);
     if (!bot) {
